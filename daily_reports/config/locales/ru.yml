@@ -1,0 +1,7 @@
+# English strings go here for Rails i18n
+ru:
+  daily_reports: "Ежедневные репорты"
+  daily_reports_last_update: "Последнее обновление"
+  daily_reports_show_prev: "Показать предыдущий день"
+  daily_reports_hours: "часов"
+  

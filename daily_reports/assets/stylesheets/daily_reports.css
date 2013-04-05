@@ -1,0 +1,11 @@
+.daily_reports_issue_table { margin: 0px 0px 0px 20px; background-color: #9F9F9F }
+.daily_reports_cell { padding: 5px; background-color: white; width: 800px }
+.daily_reports_head { padding: 5px; background-color: #E7E7E7; width: 800px }
+.daily_reports_attr { color: darkblue; width: 100px }
+.daily_reports_spent_comment { color: blue }
+.daily_reports_spent_table { margin: 2px 2px 2px 5px; background-color: #B7B7B7 }
+.daily_reports_spent_cell { padding: 5px; background-color: #F7F7F7; width: 600px }
+.daily_reports_spent_left { padding: 5px; width: 100px }
+.daily_reports_spent_left_cell { background-color: #F7F7F7; }
+.daily_reports_spent_left_sel { background-color: #BFFFBF; }
+.daily_reports_spent_left_prev { background-color: #EFFFEF; }

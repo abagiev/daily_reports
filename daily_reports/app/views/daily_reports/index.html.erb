@@ -1,0 +1,94 @@
+<% content_for :header_tags do %>
+    <%= stylesheet_link_tag 'daily_reports.css', :plugin => 'daily_reports' %>
+<% end %>
+
+<h2><%=l(:daily_reports)%></h2>
+
+<%= form_tag({}, :method => 'get') do %>
+<p>
+   <label>
+      <%= l(:label_user)%>:
+      <%= select_tag 'user_id', options_from_collection_for_select(@users, "id", "name", @user && @user.id) %>
+   </label>
+   <label>
+      <%= l(:field_effective_date)%>:
+      <%= text_field_tag('date', @date, :size => 10) + calendar_for('date') %>
+   </label>
+   <label>
+      <%= check_box_tag 'show_prev', '1', @show_prev %> <%= l(:daily_reports_show_prev) %>
+   </label>
+   <%= submit_tag l(:button_apply), :name => nil %>
+</p>
+<% end %>
+
+<% if @user %>
+   <% @trackers.each do |tracker| %>
+      <% unless tracker[:history].count == 0 %>
+         <h2><%= tracker[:tracker].name %></h2>
+         <% tracker[:history].each do |issue| %>
+            <table class='daily_reports_issue_table' border='0' cellspacing='1' cellpadding='0'>
+               <tr>
+                  <td class='daily_reports_head daily_reports_attr'><label><%= l(:label_issue) %></label></td>
+                  <td class='daily_reports_head'><%= link_to_issue(issue[:issue]) %></td>
+               </tr>
+               <tr>
+                  <td class='daily_reports_cell daily_reports_attr'><label><%= l(:field_description) %></label></td>
+                  <td class='daily_reports_cell'><%= content_tag('div', textilizable(issue[:issue], :description).html_safe, :class => "wiki") %></td>
+               </tr>
+               <tr>
+                  <td class='daily_reports_cell daily_reports_attr'><label><%= l(:daily_reports_last_update) %></label></td>
+                  <td class='daily_reports_cell'>
+                     <% issue[:journal].each do |journal| %>
+                        <% unless journal.notes.blank? %>
+                           <%= content_tag('div', textilizable(journal, :notes).html_safe, :class => "wiki") %>
+                        <% end %>
+                     <% end %>
+                  </td>
+               </tr>
+               <tr>
+                  <td class='daily_reports_cell daily_reports_attr'><label><%= l(:label_spent_time) %></label></td>
+                  <td class='daily_reports_cell'>
+                     <% issue[:spent].each do |item| %>
+                        <% cell_class = (@date.to_s == item[:date]) ? " daily_reports_spent_left_sel" : \
+                                        ((@date - 1.days).to_s == item[:date]) ? " daily_reports_spent_left_prev" : " daily_reports_spent_left_cell" %>
+                        <table class='daily_reports_spent_table' border='0' cellspacing='1' cellpadding='0'>
+                           <tr>
+                              <td class='daily_reports_spent_left<%= cell_class %>'>
+                                 <%= item[:date] %>
+                              </td>
+                              <td class='daily_reports_spent_cell<%= cell_class %>'><b><%= item[:user].name %></b></td>
+                           </tr>
+                           <tr>
+                              <td class='daily_reports_spent_left<%= cell_class %>'><b><i><%= item[:time] %> <%= l(:daily_reports_hours) %></i></b></td>
+                              <td class='daily_reports_spent_cell<%= cell_class %>'>
+                                 <% item[:spent].each do |entry| %>
+                                    <% if entry.editable_by?(User.current) %>
+                                       <%= link_to image_tag('edit.png'), edit_time_entry_path(entry), :title => l(:button_edit) %>
+                                    <% end %>
+                                    <i><%= entry.hours %>h</i> - <span class='daily_reports_spent_comment'><%= entry.comments %></span>
+                                    <br />
+                                 <% end %>
+                              </td>
+                           </tr>
+                        </table>
+                        <br />
+                     <% end %>
+                  </td>
+               </tr>
+            </table>
+            <br /><br />
+         <% end %>
+      <% end %>
+   <% end %>
+  
+  <%# @items.each do |item| %>
+    <p>
+      <%#= link_to_issue(item[:issue]) %>
+    </p>
+    <%# item[:journal].each do |journal| %>
+      <%# unless journal.notes.blank? %>
+        <%#= content_tag('div', textilizable(journal, :notes).html_safe, :class => "wiki") %>
+      <%# end %>
+    <%# end %>
+  <%# end %>
+<% end %>
